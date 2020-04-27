@@ -17,16 +17,9 @@ namespace LibraryAdmin
 
     class Books
     {
-        private List<Book> books = new List<Book>();
-
         public void AddBook(string author, string title, string genre, int year, int amount, int id)
         {
-            if (books.Exists(Book => Book.Id == id))
-            {
-                IDNotUniqueException ex = new IDNotUniqueException();
-                WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
-                throw new IDNotUniqueException();
-            }
+
             if (amount < 1)
             {
                 UnableToSetAmountLessThan1Exception ex = new UnableToSetAmountLessThan1Exception();
@@ -35,24 +28,71 @@ namespace LibraryAdmin
                 throw new UnableToSetAmountLessThan1Exception();
             }
 
-            books.Add(new Book(author, title, genre, year, amount, id));
+            using (BookContext db = new BookContext())
+            {
+                try
+                {
+                    db.Books.Add(new Book(author, title, genre, year, amount, id));
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
+                    throw ex;
+                }
+
+            }
         }
         public void RemoveBook(int id)
         {
-            books.RemoveAll(Book => Book.Id == id);
+            using (BookContext db = new BookContext())
+            {
+                try
+                {
+                    Book book = db.Books.Find(id);
+                    if (book != null)
+                    {
+                        db.Books.Remove(book);
+                        db.SaveChanges();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
+                    throw ex;
+                }
+
+            }
         }
 
         public string ShowBooks()
         {
-            string bookList = "";
-            foreach (Book book in books)
+            using (BookContext db = new BookContext())
             {
-                bookList += String.Format("{0}: {1} {2}: {3} {4}: {5} {6}: {7} {8}: {9} {10}: {11}\n",
-                Properties.strings.ID, book.Id, Properties.strings.Title, book.Title, Properties.strings.Author,
-                book.Author, Properties.strings.Genre, book.Genre, Properties.strings.Year, book.Year, 
-                Properties.strings.Amount, book.Amount);
+                try
+                {
+                    List<Book> books = db.Books.ToList();
+                    string bookList = "";
+                    foreach (Book book in books)
+                    {
+                        bookList += String.Format("{0}: {1} {2}: {3} {4}: {5} {6}: {7} {8}: {9} {10}: {11}\n",
+                        Properties.strings.ID, book.Id, Properties.strings.Title, book.Title, Properties.strings.Author,
+                        book.Author, Properties.strings.Genre, book.Genre, Properties.strings.Year, book.Year, Properties.strings.Amount, book.Amount);
+
+
+                    }
+                    return bookList;
+
+                }
+                catch (Exception ex)
+                {
+                    WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
+                    throw ex;
+                }
+
             }
-            return bookList;
+
         }
     }
 }

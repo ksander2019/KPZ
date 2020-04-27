@@ -12,8 +12,6 @@ namespace LibraryAdmin
     {
         static void Main(string[] args)
         {
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-
             Books books = new Books();
             View view = new View();
             Controller controller = new Controller(books, view);
@@ -21,7 +19,6 @@ namespace LibraryAdmin
             view.Run();
 
             Console.ReadLine();
-
         }
     }
 }
