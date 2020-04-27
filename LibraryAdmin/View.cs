@@ -8,7 +8,7 @@ namespace LibraryAdmin
 {
     class InvalidNumberOfArguementsException : Exception
     {
-        public override string Message => "Невірна кількість аргументів. Повинно бути 6 аргументів через кому.";
+        public override string Message => Properties.strings.WrongNumberOfArguements;
     }
     class View
     {
@@ -18,16 +18,16 @@ namespace LibraryAdmin
 
         public void GeneralPrompt()
         {
-            Console.WriteLine("1) Додати книгу");
-            Console.WriteLine("2) Видалити книгу");
-            Console.WriteLine("3) Показати книги");
-            Console.WriteLine("4) Вийти");
+            Console.WriteLine("1) " + Properties.strings.AddBook);
+            Console.WriteLine("2) " + Properties.strings.DeleteBook);
+            Console.WriteLine("3) " + Properties.strings.ShowBooks);
+            Console.WriteLine("4) " + Properties.strings.Exit);
         }
 
         public void Run()
         {
-            
-            Console.WriteLine("Адміністрування архіву бібліотеки");
+
+            Console.WriteLine(Properties.strings.Header);
             GeneralPrompt();
             bool b = true;
             while (b)
@@ -41,13 +41,13 @@ namespace LibraryAdmin
                 {
 
                     WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
-                    Console.WriteLine("Команда повинна бути цифрою.");
+                    Console.WriteLine(Properties.strings.CommandMustBeNumber);
 
                 }
 
                 if (input == 1)
                 {
-                    Console.WriteLine("Введіть через кому ID, автора, назву, жанр, рік видання, кількість примірників:");
+                    Console.WriteLine(Properties.strings.BookDataPrompt);
                     string s = Console.ReadLine();
                     string[] a = s.Split(',');
 
@@ -79,7 +79,7 @@ namespace LibraryAdmin
                 }
                 else if (input == 2)
                 {
-                    Console.Write("Введіть ID книги: ");
+                    Console.Write(Properties.strings.BookIDPrompt);
                     int index = Int32.Parse(Console.ReadLine());
                     controller.Remove(index);
                 }
@@ -92,7 +92,7 @@ namespace LibraryAdmin
                     b = false;
                 }
                 else
-                    Console.WriteLine("Введеної команди не існує!");
+                    Console.WriteLine(Properties.strings.CommandNotExists);
 
                 GeneralPrompt();
             }

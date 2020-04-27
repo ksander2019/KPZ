@@ -8,11 +8,11 @@ namespace LibraryAdmin
 {
     class UnableToSetAmountLessThan1Exception : Exception
     {
-        public override string Message => "Кількість примірників книги має бути більшою за 0.";
+        public override string Message => Properties.strings.AmountGreaterThanZero;
     }
     class IDNotUniqueException : Exception
     {
-        public override string Message => "Значення ID має бути унікальним.";
+        public override string Message => Properties.strings.IDMustBeUnique;
     }
 
     class Books
@@ -47,10 +47,10 @@ namespace LibraryAdmin
             string bookList = "";
             foreach (Book book in books)
             {
-                bookList += String.Format("ID: {0} Назва: {1} Автор: {2} Жанр: {3} Рік: {4} Кількість: {5}\n",
-                book.Id, book.Title, book.Author, book.Genre, book.Year, book.Amount);
-
-
+                bookList += String.Format("{0}: {1} {2}: {3} {4}: {5} {6}: {7} {8}: {9} {10}: {11}\n",
+                Properties.strings.ID, book.Id, Properties.strings.Title, book.Title, Properties.strings.Author,
+                book.Author, Properties.strings.Genre, book.Genre, Properties.strings.Year, book.Year, 
+                Properties.strings.Amount, book.Amount);
             }
             return bookList;
         }
