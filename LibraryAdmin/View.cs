@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryAdmin
 {
+    [Serializable]
     class InvalidNumberOfArguementsException : Exception
     {
         public override string Message => Properties.strings.WrongNumberOfArguements;
@@ -72,7 +73,7 @@ namespace LibraryAdmin
                     catch (ArgumentException ex)
                     {
                         WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
-                        throw ex;
+                        throw;
                     }
 
                     

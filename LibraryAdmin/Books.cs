@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace LibraryAdmin
 {
+    [Serializable]
     class UnableToSetAmountLessThan1Exception : Exception
     {
         public override string Message => Properties.strings.AmountGreaterThanZero;
     }
+    [Serializable]
     class IDNotUniqueException : Exception
     {
         public override string Message => Properties.strings.IDMustBeUnique;
@@ -38,7 +40,7 @@ namespace LibraryAdmin
                 catch (Exception ex)
                 {
                     WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
-                    throw ex;
+                    throw;
                 }
 
             }
@@ -60,7 +62,7 @@ namespace LibraryAdmin
                 catch (Exception ex)
                 {
                     WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
-                    throw ex;
+                    throw;
                 }
 
             }
@@ -88,7 +90,7 @@ namespace LibraryAdmin
                 catch (Exception ex)
                 {
                     WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
-                    throw ex;
+                    throw;
                 }
 
             }
