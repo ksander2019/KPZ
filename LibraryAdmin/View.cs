@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace LibraryAdmin
 {
+    class InvalidNumberOfArguementsException : Exception
+    {
+        public override string Message => "Невірна кількість аргументів. Повинно бути 6 аргументів через кому.";
+    }
     class View
     {
         Controller controller;
@@ -28,22 +32,50 @@ namespace LibraryAdmin
             bool b = true;
             while (b)
             {
-                int input = Int32.Parse(Console.ReadLine());
+                int input = 0;
+                try
+                {
+                    input = Int32.Parse(Console.ReadLine());
+                }
+                catch (Exception ex)
+                {
+
+                    WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
+                    Console.WriteLine("Команда повинна бути цифрою.");
+
+                }
+
                 if (input == 1)
                 {
                     Console.WriteLine("Введіть через кому ID, автора, назву, жанр, рік видання, кількість примірників:");
                     string s = Console.ReadLine();
                     string[] a = s.Split(',');
 
-                    int amount = Int32.Parse(a[5]);
-                    int year = Int32.Parse(a[4]);
-                    int id = Int32.Parse(a[0]);
-
-                    for (int i = 1; i < 4; i++)
+                    if (a.Length != 6)
                     {
-                        a[i] = a[i].Trim(' ');
+                        InvalidNumberOfArguementsException ex = new InvalidNumberOfArguementsException();
+                        WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
+                        throw new InvalidNumberOfArguementsException();
                     }
-                    controller.Add(a[1], a[2], a[3], year, amount, id);
+                    try
+                    {
+                        int amount = Int32.Parse(a[5]);
+                        int year = Int32.Parse(a[4]);
+                        int id = Int32.Parse(a[0]);
+
+                        for (int i = 1; i < 4; i++)
+                        {
+                            a[i] = a[i].Trim(' ');
+                        }
+                        controller.Add(a[1], a[2], a[3], year, amount, id);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        WriteLogFile.WriteLog("LibraryAdminLog.txt", ex.Message);
+                        throw ex;
+                    }
+
+                    
                 }
                 else if (input == 2)
                 {
@@ -59,6 +91,8 @@ namespace LibraryAdmin
                 {
                     b = false;
                 }
+                else
+                    Console.WriteLine("Введеної команди не існує!");
 
                 GeneralPrompt();
             }
