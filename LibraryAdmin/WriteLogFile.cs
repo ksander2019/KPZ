@@ -11,18 +11,24 @@ namespace LibraryAdmin
     {
         public static bool WriteLog(string strFileName, string strMessage)
         {
+            Stream stream = null;
             try
             {
-                FileStream objFilestream = new FileStream(string.Format("{0}\\{1}", Path.GetTempPath(), strFileName), FileMode.Append, FileAccess.Write);
-                StreamWriter objStreamWriter = new StreamWriter((Stream)objFilestream);
+                stream = new FileStream(string.Format("{0}\\{1}", Path.GetTempPath(), strFileName), FileMode.Append, FileAccess.Write);
+                StreamWriter objStreamWriter = new StreamWriter(stream);
                 objStreamWriter.WriteLine(strMessage + String.Format(" {0} {1}", Properties.strings.Date, DateTime.Now));
                 objStreamWriter.Close();
-                objFilestream.Close();
+                stream = null;
                 return true;
             }
             catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
         }
     }
